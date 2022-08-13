@@ -1,4 +1,4 @@
-# bone-blog
+# Bone Blog
 
 ## Project setup
 ```
