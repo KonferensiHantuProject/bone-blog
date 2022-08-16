@@ -1,7 +1,9 @@
 <template>
     <div class="home">
         <h1>Home</h1>
-        <PostList :posts="posts" />
+        <PostList :posts="posts" v-if="showPosts" />
+        <button @click="showPosts = !showPosts">Toggle Postingan</button>
+        <button @click="posts.pop()">Hapus Postingan</button>
     </div>
 </template>
 
@@ -20,8 +22,12 @@ export default {
             { title: 'Selamat Datang Lagi', body: 'lorep ipsum dolor number two', id: 2},
         ])
 
+        // Reactive Toggle
+        const showPosts = ref(true)
+
         return {
-            posts
+            posts,
+            showPosts
         }
     }
 }
