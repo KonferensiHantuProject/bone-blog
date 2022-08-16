@@ -1,9 +1,11 @@
 <template>
     <div class="home">
         <h1>Home</h1>
-        <PostList :posts="posts" v-if="showPosts" />
-        <button @click="showPosts = !showPosts">Toggle Postingan</button>
-        <button @click="posts.pop()">Hapus Postingan</button>
+        <div v-if="error">{{ error }}</div>
+        <div v-if="posts.length">
+            <PostList :posts="posts" />
+        </div>
+        <div v-else>Loading...</div>
     </div>
 </template>
 
@@ -17,17 +19,31 @@ export default {
         PostList
     },
     setup() {
-        const posts = ref([
-            { title: 'Selamat Datang', body: 'lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor lorep ipsum dolor', id: 1},
-            { title: 'Selamat Datang Lagi', body: 'lorep ipsum dolor number two', id: 2},
-        ])
+        const posts = ref([])
+        const error = ref(null)
 
-        // Reactive Toggle
-        const showPosts = ref(true)
+        const load = async () => {
+            try{
+                let data = await fetch("http://localhost:3000/posts")
 
+                // Jika ok
+                if(!data.ok)
+                {
+                    throw Error('Tidak ada data')
+                }
+
+                posts.value  = await data.json()
+            }catch(err){
+                error.value = err.message
+                console.log(error.value)
+            }
+
+        }
+
+        load()
         return {
             posts,
-            showPosts
+            error
         }
     }
 }
